@@ -9,12 +9,18 @@ var tiles; var emptySlot_X = 300; var emptySlot_Y = 300; var piece
 "use strict";
 window.onload = function()
 {
+  tiles = $("#puzzlearea")[0].children;
+  $("#shufflebutton")[0].onclick = shufflePieces
+
+  //randomly selects a background when the game starts
+  randomBackground();
+  
   //Creates the change picture radio buttons and appends it to the body of the html file
   $("#controls").after("<form id ='setup'></form>")
   $("#setup").append("<p id = 'header'>SELCECT OF FOUR OPTIONS</p>");
   $("#setup").append("<input type = 'radio' name = 'Back' value= 1>superman</input>");
   $("#setup").append("<input type = 'radio' name= 'Back' value= 2>Itunes Logo</input>");
-  $("#setup").append("<input type = 'radio' name= 'Back' value= 3>Angry Bird</input>");
+  $("#setup").append("<input type = 'radio' name= 'Back' value= ''>Angry Bird</input>");
   $("#setup").append("<input type = 'radio' name= 'Back' value= 4>Github logo</input>");
   $("#header")[0].style.textAlign = "center";
 
@@ -28,8 +34,7 @@ window.onload = function()
       shufflePieces();
   });
 }
-  tiles = $("#puzzlearea")[0].children;
-  $("#shufflebutton")[0].onclick = shufflePieces
+
   for(i = 0; i < tiles.length; i++)
     {
       tiles[i].className = "puzzlepiece";
@@ -165,3 +170,18 @@ of the fourth images available*/
        tiles[i].style.backgroundImage =`url('background${value}.jpg')`;
       }
 }
+function randomBackground()
+  {
+    var pictures = ["background.jpg","background1.jpg","background2.jpg","background4.jpg"];
+    var current = tiles[0].style.backgroundImage.slice(5, -2);
+    var RanNum = Math.floor(Math.random() * pictures.length);
+
+   while(current == pictures[RanNum])
+    {
+       RanNum = Math.floor(Math.random() * pictures.length);
+    }
+    for (var i = 0; i < tiles.length; i++)
+    {
+      tiles[i].style.backgroundImage = "url('" + pictures[RanNum] +"')";
+    }
+  }
