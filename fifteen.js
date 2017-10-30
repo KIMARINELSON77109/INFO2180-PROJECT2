@@ -9,14 +9,31 @@ var tiles; var emptySlot_X = 300; var emptySlot_Y = 300; var piece
 "use strict";
 window.onload = function()
 {
-  //Creates the change picture button and appends it to the div with class "controls"
-  $("#controls").append("<button id = 'Button'>Change picture</button>");
   tiles = $("#puzzlearea")[0].children;
-  $("#shufflebutton")[0].onclick = shufflePieces;
-  $("#Button").on("click",function(){
-    changeBackground()
-    shufflePieces()
+  $("#shufflebutton")[0].onclick = shufflePieces
+
+  //randomly selects a background when the game starts
+  randomBackground();
+  
+  //Creates the change picture radio buttons and appends it to the body of the html file
+  $("#controls").after("<form id ='setup'></form>")
+  $("#setup").append("<p id = 'header'>SELCECT OF FOUR OPTIONS</p>");
+  $("#setup").append("<input type = 'radio' name = 'Back' value= 1>superman</input>");
+  $("#setup").append("<input type = 'radio' name= 'Back' value= 2>Itunes Logo</input>");
+  $("#setup").append("<input type = 'radio' name= 'Back' value= ''>Angry Bird</input>");
+  $("#setup").append("<input type = 'radio' name= 'Back' value= 4>Github logo</input>");
+  $("#header")[0].style.textAlign = "center";
+
+  /*get the value of a radio button and passes it to the changeBackground function to select the background
+  image associated with that radio button*/
+  var formEle = $("#setup")[0].elements
+  for (var i = 0; i < formEle.length; i++)
+    {
+      formEle[i].addEventListener("click",function(){
+      changeBackground(this.value);
+      shufflePieces();
   });
+}
 
   for(i = 0; i < tiles.length; i++)
     {
@@ -26,7 +43,6 @@ window.onload = function()
       tiles[i].style.left = (i % 4 * 100) + "px";
 			tiles[i].style.top = (parseInt(i / 4) * 100) + "px";
 
-      console.log( (i % 4 * 100),(parseInt(i / 4) * 100))
       // Evaluates to "-XXX px -YYY px" to position the image on the squares using X and Y coordinates
       tiles[i].style.backgroundPosition = "-" + tiles[i].style.left + " " + "-" + tiles[i].style.top;
 
@@ -42,8 +58,6 @@ window.onload = function()
        empty space tile*/
       tiles[i].onclick = moveTile;
     }
-    //Background is select at random when the game starts
-   changeBackground();
  }
 
   /*This function checks if a tile is valid to be swapped with the empty tile and if it is valid the "movablepiece" class
@@ -101,7 +115,6 @@ window.onload = function()
       { /* if RanNummber is zero, a left and top style is use as inputs in getsyle to find the tile that has that style position,
         when it is found that tile's style is swapped with the empty tile style, hence moving the tile to the empty sapce*/
         (getStyle((emptySlot_Y-100)+"px", emptySlot_X +"px"))|| getStyle((emptySlot_Y+100)+"px", emptySlot_X +"px");
-        console.log(piece)
         yValue = parseInt(piece.style.top);
         xValue = parseInt(piece.style.left);
         piece.style.top = emptySlot_Y + "px";
@@ -149,18 +162,26 @@ window.onload = function()
  }
 /*This function changes the background image of the puzzle based on random selection
 of the fourth images available*/
- function changeBackground()
+
+ function changeBackground(value)
  {
-   var pictures = ["background.jpg","itune.jpg","snap.jpg","sman.jpg"];
-   var current = tiles[0].style.backgroundImage.slice(5, -2);
-   var RanNum = Math.floor(Math.random() * pictures.length);
+   for (var i = 0; i < tiles.length; i++)
+     {
+       tiles[i].style.backgroundImage =`url('background${value}.jpg')`;
+      }
+}
+function randomBackground()
+  {
+    var pictures = ["background.jpg","background1.jpg","background2.jpg","background4.jpg"];
+    var current = tiles[0].style.backgroundImage.slice(5, -2);
+    var RanNum = Math.floor(Math.random() * pictures.length);
 
    while(current == pictures[RanNum])
-   {
-      RanNum = Math.floor(Math.random() * pictures.length);
-   }
-   for (var i = 0; i < tiles.length; i++)
-   {
-     tiles[i].style.backgroundImage = "url('" + pictures[RanNum] +"')";
-   }
- }
+    {
+       RanNum = Math.floor(Math.random() * pictures.length);
+    }
+    for (var i = 0; i < tiles.length; i++)
+    {
+      tiles[i].style.backgroundImage = "url('" + pictures[RanNum] +"')";
+    }
+  }
